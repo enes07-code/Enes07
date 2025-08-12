@@ -1,220 +1,61 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mini Oyun</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: white;
-      color: #111;
-      text-align: center;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .game {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 10px;
-      color: black;
-    }
-
-    .subtitle {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: black;
-    }
-
-    .question {
-      font-size: 20px;
-      margin: 10px 0;
-      font-weight: bold;
-    }
-
-    .options {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    .options button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: black;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .options button:hover {
-      background-color: #444;
-    }
-
-    .result {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 20px;
-      color: black;
-    }
-
-    .insta {
-      margin-top: 10px;
-      font-size: 16px;
-    }
-
-    .insta a {
-      color: #d6249f;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .footer {
-      background-color: black;
-      color: white;
-      padding: 12px;
-      font-weight: bold;
-    }
-
-    .footer a {
-      color: #d6249f;
-      text-decoration: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kedi Sayfası</title>
+<style>
+  body, html {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    font-family: Arial, sans-serif;
+  }
+  .text {
+    font-size: 24px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #333;
+  }
+  img {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  button {
+    margin: 20px 0;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <!-- Ses dosyasının eklenmesi -->
-  <audio id="bg-music" autoplay loop>
-    <source src="https://drive.google.com/uc?export=download&id=17ptDQ5WE3V-dy4DgCPks_7jOad2JoBts" type="audio/mpeg">
-    Tarayıcınız audio elementini desteklemiyor.
-  </audio>
 
-  <div class="top-bar">
-    <div id="lives">❤️❤️❤️</div>
-    <div>⌛ <span id="timer">2:00</span></div>
-    <div id="trophies"></div>
-  </div>
+<div class="text">Berat neden mesajlarıma cevap verilmiyor ?✨</div>
+<img src="https://c.tenor.com/__3yYXQkf9wAAAAd/tenor.gif" alt="Sevimli Kedi" />
+<div class="text">Berat yuvarlak mısın😈✨</div>
 
-  <div class="game">
-    <div class="title">Mini Bir Oyuna Var Mısın ?</div>
-    <div class="subtitle">Enes😐</div>
-    <div class="question" id="question">Yükleniyor...</div>
-    <div class="options" id="options"></div>
-    <div class="result" id="result"></div>
-    <div class="insta" id="insta" style="display:none;">
-      <p>İstersen beni Instagram'da da takip edebilirsin: 
-      <a href="https://www.instagram.com/_eness._07_?igsh=b2lsNG5rMjJpaW5p" target="_blank">@_eness._07_</a></p>
-    </div>
-  </div>
+<button onclick="playMusic()">Müziği Başlat</button>
 
-  <div class="footer">
-    Geri bildirim için: <a href="https://www.instagram.com/_eness._07_?igsh=b2lsNG5rMjJpaW5p" target="_blank">@_eness._07_</a>
-  </div>
+<audio id="music" loop>
+  <source src="audi.mp3" type="audio/mpeg">
+  Tarayıcınız ses etiketini desteklemiyor.
+</audio>
 
-  <script>
-    const questions = [
-      { q: "1 + 1 kaç eder?", options: ["2", "3"], answer: "2" },
-      { q: "3 - 1 kaç eder?", options: ["2", "1"], answer: "2" },
-      { q: "5 + 0 kaç eder?", options: ["5", "6"], answer: "5" },
-      { q: "2 x 1 kaç eder?", options: ["2", "3"], answer: "2" }
-    ];
+<script>
+  function playMusic() {
+    const music = document.getElementById('music');
+    music.play().catch(error => {
+      alert("Müziği çalarken bir sorun oluştu: " + error);
+    });
+  }
+</script>
 
-    let current = 0;
-    let lives = 3;
-    let trophies = 0;
-    let timer = 120;
-
-    const questionEl = document.getElementById("question");
-    const optionsEl = document.getElementById("options");
-    const resultEl = document.getElementById("result");
-    const livesEl = document.getElementById("lives");
-    const trophiesEl = document.getElementById("trophies");
-    const timerEl = document.getElementById("timer");
-    const instaEl = document.getElementById("insta");
-
-    function updateQuestion() {
-      if (current >= questions.length || lives <= 0) {
-        endGame();
-        return;
-      }
-
-      const q = questions[current];
-      questionEl.textContent = q.q;
-      optionsEl.innerHTML = "";
-      q.options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.textContent = opt;
-        btn.onclick = () => selectAnswer(opt);
-        optionsEl.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(ans) {
-      const correct = questions[current].answer;
-      if (ans === correct) {
-        trophies++;
-        trophiesEl.innerHTML += "🏆";
-        resultEl.textContent = "Doğru! 🏆";
-      } else {
-        lives--;
-        livesEl.innerHTML = "❤️".repeat(lives);
-        resultEl.textContent = "Yanlış! 💔";
-      }
-      current++;
-      setTimeout(updateQuestion, 700);
-    }
-
-    function endGame() {
-      if (trophies >= 3) {
-        resultEl.textContent = "Kazandın! Tebrikler! 🎉";
-      } else {
-        resultEl.textContent = "Kaybettin! 🤨";
-      }
-      instaEl.style.display = "block";
-      optionsEl.innerHTML = "";
-      questionEl.textContent = "";
-    }
-
-    function startTimer() {
-      const interval = setInterval(() => {
-        if (timer <= 0) {
-          clearInterval(interval);
-          endGame();
-          return;
-        }
-        timer--;
-        const min = Math.floor(timer / 60);
-        const sec = timer % 60;
-        timerEl.textContent = `${min}:${sec < 10 ? "0" : ""}${sec}`;
-      }, 1000);
-    }
-
-    updateQuestion();
-    startTimer();
-  </script>
 </body>
 </html>
