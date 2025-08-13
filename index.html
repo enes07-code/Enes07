@@ -1,60 +1,146 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kedi Sayfası</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tur ve Tatil Seçimi</title>
 <style>
-  body, html {
+   * {box-sizing:border-box; }
+    body {
     margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #fff;
-    font-family: Arial, sans-serif;
-  }
-  .text {
-    font-size: 24px;
-    margin: 10px 0;
-    font-weight: bold;
-    color: #333;
-  }
-  img {
-    max-width: 300px;
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  button {
-    margin: 20px 0;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-  }
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000000;
+      background: #0b132b
+        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&auto=format&fit=crop')
+        center/cover fixed no-repeat;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    select, input, button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    button {
+        background: #28a745;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 20px;
+        padding: 10px;
+        background: #e9ffe9;
+        border: 1px solid #b2ffb2;
+        border-radius: 5px;
+    }
+    .result img {
+        max-width: 100%;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
 </style>
 </head>
 <body>
 
-<div class="text">Enes!?😈✨</div>
-<img src="https://c.tenor.com/__3yYXQkf9wAAAAd/tenor.gif" alt="Sevimli Kedi" />
-<div class="text">Otistiğim 😉✨</div>
+<h1>Tur ve Tatil Seçimi</h1>
 
-<button onclick="playMusic()">Müziği Başlat😈</button>
+<div class="container">
+    <label for="from">Nereden:</label>
+    <select id="from">
+        <option value="istanbul">İstanbul</option>
+        <option value="ankara">Ankara</option>
+        <option value="izmir">İzmir</option>
+    </select>
 
-<audio id="music" loop>
-  <source src="audi.mp3" type="audio/mpeg">
-  Tarayıcınız ses etiketini desteklemiyor.
-</audio>
+    <label for="to">Nereye:</label>
+    <select id="to">
+        <option value="antalya">Antalya</option>
+        <option value="bodrum">Bodrum</option>
+        <option value="kapadokya">Kapadokya</option>
+    </select>
+
+    <label for="date">Tarih:</label>
+    <input type="date" id="date">
+
+    <label for="people">Kişi Sayısı:</label>
+    <input type="number" id="people" min="1" value="1">
+
+    <button onclick="hesapla()">Fiyat ve Detay Göster</button>
+
+    <div class="result" id="result" style="display:none;"></div>
+</div>
 
 <script>
-  function playMusic() {
-    const music = document.getElementById('music');
-    music.play().catch(error => {
-      alert("Müziği çalarken bir sorun oluştu: " + error);
-    });
-  }
+function hesapla() {
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const date = document.getElementById("date").value;
+    const people = parseInt(document.getElementById("people").value);
+
+    // Örnek fiyat listesi
+    const fiyatlar = {
+        antalya: 1500,
+        bodrum: 1800,
+        kapadokya: 1200
+    };
+
+    // Örnek görseller
+    const resimler = {
+        antalya: "https://www.bizevdeyokuz.com/wp-content/uploads/olimpos-kapak.jpg",
+        bodrum: "https://www.bizevdeyokuz.com/wp-content/uploads/mazi-koyu-bodrum.jpg",
+        kapadokya: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Cappadocia_balloon_trip.jpg/640px-Cappadocia_balloon_trip.jpg"
+    };
+
+    // Fiyat hesaplama
+    let fiyat = fiyatlar[to] * people;
+
+    // Detay metni
+    let detay = "";
+    if (to === "antalya") {
+        detay = "Antalya'nın eşsiz plajları ve tarihi dokusuyla harika bir tatil sizi bekliyor.";
+    } else if (to === "bodrum") {
+        detay = "Bodrum'un gece hayatı ve berrak denizinde unutulmaz bir tatil.";
+    } else if (to === "kapadokya") {
+        detay = "Kapadokya'nın peri bacaları ve balon turları ile masalsı bir deneyim.";
+    }
+
+    // Sonuç göster
+    const resultDiv = document.getElementById("result");
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = `
+        <h2>Seçtiğiniz Tatil</h2>
+        <p><strong>Nereden:</strong> ${from.toUpperCase()}</p>
+        <p><strong>Nereye:</strong> ${to.toUpperCase()}</p>
+        <p><strong>Tarih:</strong> ${date}</p>
+        <p><strong>Kişi Sayısı:</strong> ${people}</p>
+        <p><strong>Toplam Fiyat:</strong> ${fiyat} TL</p>
+        <p>${detay}</p>
+        <img src="${resimler[to]}" alt="${to}">
+    `;
+}
 </script>
 
 </body>
