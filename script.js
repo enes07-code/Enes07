@@ -1,251 +1,141 @@
-/* ========== DATA ========== */
-const collections = [
-  {
-    title: "Velvet Soft",
-    meta: "24 gif • 1.2k",
-    badge: "HD",
-    desc: "Yumuşak pembe tonlar, akışkan hareketler ve yüksek kalite gif koleksiyonu.",
-    gradient: "linear-gradient(160deg, #ff6b9d 0%, #c44569 100%)"
-  },
-  {
-    title: "Blush Flow",
-    meta: "18 gif • 890",
-    badge: "Yeni",
-    desc: "Işık oyunları ve yavaş geçişli animasyonlar.",
-    gradient: "linear-gradient(160deg, #ff8fb8 0%, #ff4d8d 100%)"
-  },
-  {
-    title: "Silk Wave",
-    meta: "31 gif • 2.4k",
-    badge: "",
-    desc: "İpek gibi akan formlar ve derin pembe gölgeler.",
-    gradient: "linear-gradient(160deg, #ffb3d1 0%, #ff6b9d 100%)"
-  },
-  {
-    title: "Rose Pulse",
-    meta: "12 gif • 3.1k",
-    badge: "Hot",
-    desc: "Nabız gibi atan neon-pembe efektler.",
-    gradient: "linear-gradient(160deg, #ff4d8d 0%, #9b2d5a 100%)"
-  },
-  {
-    title: "Petal Drift",
-    meta: "27 gif • 1.7k",
-    badge: "",
-    desc: "Yüzen taç yaprakları ve soft blur.",
-    gradient: "linear-gradient(160deg, #ff9ec4 0%, #e05a8a 100%)"
-  },
-  {
-    title: "Neon Bloom",
-    meta: "15 gif • 4.2k",
-    badge: "4K",
-    desc: "Parlak neon vurgular ve 4K kalite.",
-    gradient: "linear-gradient(160deg, #ff6b9d 0%, #ff2e6d 100%)"
-  }
-];
-
-/* ========== RENDER CARDS ========== */
-const grid = document.getElementById("grid");
-
-collections.forEach((item, i) => {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.style.animationDelay = `${i * 0.08}s`;
-  card.innerHTML = `
-    <div class="card-inner">
-      <div class="card-bg" style="background:${item.gradient}"></div>
-      <div class="card-overlay"></div>
-      \( {item.badge ? `<div class="badge"> \){item.badge}</div>` : ""}
-      <div class="card-info">
-        <div class="card-title">${item.title}</div>
-        <div class="card-meta">${item.meta}</div>
-      </div>
-    </div>
-  `;
-  card.addEventListener("click", () => openViewer(i));
-  grid.appendChild(card);
-});
-
-/* Staggered entrance */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-    }
-  });
-}, { threshold: 0.15 });
-
-document.querySelectorAll(".card").forEach(card => observer.observe(card));
-
-/* ========== 3D TILT + PARALLAX ON CARDS ========== */
-document.querySelectorAll(".card").forEach(card => {
-  const inner = card.querySelector(".card-inner");
-
-  card.addEventListener("mousemove", (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -9;
-    const rotateY = ((x - centerX) / centerX) * 9;
-
-    inner.style.transform = `rotateX(\( {rotateX}deg) rotateY( \){rotateY}deg) scale3d(1.03,1.03,1.03)`;
-  });
-
-  card.addEventListener("mouseleave", () => {
-    inner.style.transform = "rotateX(0) rotateY(0) scale3d(1,1,1)";
-  });
-
-  // Touch tilt (light)
-  card.addEventListener("touchmove", (e) => {
-    const touch = e.touches[0];
-    const rect = card.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -6;
-    const rotateY = ((x - centerX) / centerX) * 6;
-    inner.style.transform = `rotateX(\( {rotateX}deg) rotateY( \){rotateY}deg)`;
-  }, { passive: true });
-
-  card.addEventListener("touchend", () => {
-    inner.style.transform = "rotateX(0) rotateY(0)";
-  });
-});
-
-/* ========== GLOBAL MOUSE / TOUCH PARALLAX (BLOBS) ========== */
-const blobs = document.querySelectorAll(".blob");
-let mouseX = 0, mouseY = 0;
-let currentX = 0, currentY = 0;
-
-function updateParallax() {
-  currentX += (mouseX - currentX) * 0.06;
-  currentY += (mouseY - currentY) * 0.06;
-
-  blobs.forEach(blob => {
-    const speed = parseFloat(blob.dataset.speed) || 0.04;
-    const x = currentX * speed * 80;
-    const y = currentY * speed * 80;
-    blob.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-  });
-
-  requestAnimationFrame(updateParallax);
-}
-updateParallax();
-
-window.addEventListener("mousemove", (e) => {
-  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-window.addEventListener("touchmove", (e) => {
-  const t = e.touches[0];
-  mouseX = (t.clientX / window.innerWidth - 0.5) * 2;
-  mouseY = (t.clientY / window.innerHeight - 0.5) * 2;
-}, { passive: true });
-
-/* ========== PARTICLES ========== */
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particles = [];
-let w, h;
-
-function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
-
-class Particle {
-  constructor() {
-    this.reset();
-  }
-  reset() {
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
-    this.size = Math.random() * 2.2 + 0.6;
-    this.speedX = (Math.random() - 0.5) * 0.35;
-    this.speedY = (Math.random() - 0.5) * 0.35;
-    this.opacity = Math.random() * 0.35 + 0.1;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 150, 190, ${this.opacity})`;
-    ctx.fill();
-  }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-for (let i = 0; i < 55; i++) particles.push(new Particle());
-
-function animateParticles() {
-  ctx.clearRect(0, 0, w, h);
-  particles.forEach(p => {
-    p.update();
-    p.draw();
-  });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-/* ========== VIEWER ========== */
-const viewer = document.getElementById("viewer");
-const viewerBg = document.getElementById("viewerBg");
-const viewerTitle = document.getElementById("viewerTitle");
-const viewerDesc = document.getElementById("viewerDesc");
-
-function openViewer(index) {
-  const item = collections[index];
-  viewerBg.style.background = item.gradient;
-  viewerTitle.textContent = item.title;
-  viewerDesc.textContent = item.desc;
-  viewer.classList.add("open");
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0d0010;
+    color: #fff;
 }
 
-document.getElementById("closeViewer").addEventListener("click", () => {
-  viewer.classList.remove("open");
-});
+/* Header */
+.app-header {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 10;
+    font-weight: 600;
+    font-size: 16px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
 
-viewer.addEventListener("click", (e) => {
-  if (e.target === viewer) viewer.classList.remove("open");
-});
+.app-header .tab {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
-/* ========== TABS ========== */
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-  });
-});
+.app-header .tab.active {
+    opacity: 1;
+    color: #ff2a8d;
+    border-bottom: 2px solid #ff2a8d;
+    padding-bottom: 4px;
+    filter: drop-shadow(0 0 8px #ff2a8d);
+}
 
-/* ========== HEADER HIDE ON SCROLL ========== */
-const main = document.getElementById("main");
-const header = document.getElementById("header");
-let lastScroll = 0;
+/* Swiper Kapsayıcı */
+.swiper {
+    width: 100%;
+    height: 100vh;
+}
 
-main.addEventListener("scroll", () => {
-  const current = main.scrollTop;
-  if (current > lastScroll && current > 60) {
-    header.style.transform = "translateY(-100%)";
-    header.style.opacity = "0";
-  } else {
-    header.style.transform = "translateY(0)";
-    header.style.opacity = "1";
-  }
-  lastScroll = current;
-});
+.swiper-slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-/* iOS overscroll prevention */
-document.body.addEventListener("touchmove", (e) => {
-  if (!e.target.closest("main") && !e.target.closest(".viewer")) {
-    e.preventDefault();
-  }
-}, { passive: false });
+.swiper-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Katman / Overlay */
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 15px 40px 15px;
+    background: linear-gradient(0deg, rgba(13,0,16,0.95) 0%, rgba(13,0,16,0.4) 50%, rgba(0,0,0,0) 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    box-sizing: border-box;
+}
+
+.user-info {
+    max-width: 75%;
+}
+
+.user-info h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: #ff66b2;
+    text-shadow: 0 0 10px rgba(255, 42, 141, 0.6);
+}
+
+.user-info p {
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0.95;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+/* Sağ Butonlar */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+}
+
+.action-buttons button {
+    background: rgba(255, 42, 141, 0.15);
+    border: 1px solid rgba(255, 102, 178, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 42, 141, 0.25);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease;
+}
+
+.action-buttons button:active {
+    transform: scale(0.85);
+}
+
+.action-buttons button.liked {
+    background: rgba(255, 42, 141, 0.8);
+    border-color: #ff2a8d;
+    box-shadow: 0 0 20px rgba(255, 42, 141, 0.8);
+}
+
+.action-buttons button span {
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 600;
+}
