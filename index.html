@@ -1,87 +1,36 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Pink Fluid</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PinkScroll - Dynamic TikTok UI</title>
+    
+    <!-- iOS PWA ve Tam Ekran Ayarları -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d0010">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg" id="bg">
-    <div class="blob blob-1" data-speed="0.03"></div>
-    <div class="blob blob-2" data-speed="0.05"></div>
-    <div class="blob blob-3" data-speed="0.04"></div>
-    <div class="blob blob-4" data-speed="0.06"></div>
-    <div class="blob blob-5" data-speed="0.025"></div>
-    <canvas id="particles"></canvas>
-  </div>
 
-  <div class="app">
-    <!-- Header -->
-    <header class="header" id="header">
-      <div class="logo">Pink Fluid</div>
-      <div class="avatar">♡</div>
-    </header>
-
-    <!-- Search -->
-    <div class="search-wrap">
-      <div class="search-container">
-        <span class="search-icon">⌕</span>
-        <input class="search" type="text" placeholder="Ara..." id="searchInput">
-      </div>
+    <!-- Header / Üst Bar -->
+    <div class="app-header">
+        <span class="tab active">Sana Özel</span>
+        <span class="tab">Takip Edilenler</span>
     </div>
 
-    <!-- Main Content -->
-    <main id="main">
-      <div class="section-title">Öne Çıkanlar</div>
-      <div class="grid" id="grid">
-        <!-- Cards injected by JS -->
-      </div>
-    </main>
-
-    <!-- Bottom Tab Bar -->
-    <nav class="tabbar">
-      <div class="tab active" data-tab="home">
-        <div class="tab-icon">⌂</div>
-        <span>Keşfet</span>
-      </div>
-      <div class="tab" data-tab="fav">
-        <div class="tab-icon">♡</div>
-        <span>Favoriler</span>
-      </div>
-      <div class="tab" data-tab="col">
-        <div class="tab-icon">◎</div>
-        <span>Koleksiyon</span>
-      </div>
-      <div class="tab" data-tab="profile">
-        <div class="tab-icon">☰</div>
-        <span>Profil</span>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Viewer Modal -->
-  <div class="viewer" id="viewer">
-    <div class="viewer-header">
-      <div style="width:36px"></div>
-      <div class="viewer-label">Önizleme</div>
-      <button class="close-btn" id="closeViewer">✕</button>
-    </div>
-    <div class="viewer-content">
-      <div class="viewer-card" id="viewerCard">
-        <div class="viewer-bg" id="viewerBg"></div>
-        <div class="viewer-shine"></div>
-        <div class="viewer-info">
-          <div class="viewer-title" id="viewerTitle"></div>
-          <div class="viewer-desc" id="viewerDesc"></div>
+    <!-- Swiper Kapsayıcı (Videolar JS ile buraya yüklenecek) -->
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper" id="video-wrapper">
+            <!-- Dinamik İletiler JS ile eklenecek -->
         </div>
-      </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <!-- Swiper JS & Uygulama Scripti -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
