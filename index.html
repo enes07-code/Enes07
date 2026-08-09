@@ -1,220 +1,87 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sana Özel Cimcime 💞</title>
-    <style>
-        :root {
-            --ana-renk: #ffafbd;
-            --ara-renk: #ffc3a0;
-            --yazi-renk: #6d4c41;
-            --beyaz: rgba(255, 255, 255, 0.95);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            margin: 0; padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--ana-renk), var(--ara-renk));
-            height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; color: var(--yazi-renk);
-            touch-action: none;
-        }
-
-        #mainWrapper {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            transition: filter 0.4s ease;
-        }
-
-        .container {
-            position: relative; z-index: 1; text-align: center;
-            background: var(--beyaz); padding: 25px;
-            border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 90%; max-width: 380px;
-        }
-
-        .kedi-cerceve {
-            width: 100%; height: 320px;
-            margin: 15px auto;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 4px solid white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            background: white;
-            transition: transform 0.4s ease;
-            cursor: grab;
-        }
-
-        #kediResmi { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        #itirafMetni {
-            font-size: 1.1rem; font-weight: 600;
-            margin: 15px 0; min-height: 60px;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        #reactionOverlay {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.8rem; font-weight: 900;
-            z-index: 100; pointer-events: none;
-            display: none; text-align: center;
-            animation: popOut 0.5s ease forwards;
-        }
-
-        @keyframes popOut { 0% { scale: 0.5; opacity: 0; } 50% { scale: 1.1; opacity: 1; } 100% { scale: 1; opacity: 0; } }
-
-        .talimat { font-size: 0.75rem; opacity: 0.6; margin-top: 5px; line-height: 1.3; }
-
-        #finalScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; color: #fff;
-            display: none; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 200; text-align: center; padding: 40px;
-        }
-
-        .heart { position: absolute; color: #ff4b2b; animation: fly 3s linear forwards; pointer-events: none; }
-        @keyframes fly { from { transform: translateY(100vh); opacity: 1; } to { transform: translateY(-10vh); opacity: 0; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Pink Fluid</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Animated Background -->
+  <div class="bg" id="bg">
+    <div class="blob blob-1" data-speed="0.03"></div>
+    <div class="blob blob-2" data-speed="0.05"></div>
+    <div class="blob blob-3" data-speed="0.04"></div>
+    <div class="blob blob-4" data-speed="0.06"></div>
+    <div class="blob blob-5" data-speed="0.025"></div>
+    <canvas id="particles"></canvas>
+  </div>
 
-    <div id="reactionOverlay"></div>
+  <div class="app">
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="logo">Pink Fluid</div>
+      <div class="avatar">♡</div>
+    </header>
 
-    <div id="mainWrapper">
-        <div id="heartContainer"></div>
-        <div class="container">
-            <h2 style="margin: 0; font-size: 1.2rem;">Sana Özel Cimcime 💞</h2>
-            
-            <div class="kedi-cerceve" id="kediKarti">
-                <img id="kediResmi" src="https://api.imghippo.com/files/ukM4075mOo.jpg">
-            </div>
+    <!-- Search -->
+    <div class="search-wrap">
+      <div class="search-container">
+        <span class="search-icon">⌕</span>
+        <input class="search" type="text" placeholder="Ara..." id="searchInput">
+      </div>
+    </div>
 
-            <div id="itirafMetni">Sana özel bir sürprizim var. <br>Hadi kaydırmaya başla! ✨</div>
+    <!-- Main Content -->
+    <main id="main">
+      <div class="section-title">Öne Çıkanlar</div>
+      <div class="grid" id="grid">
+        <!-- Cards injected by JS -->
+      </div>
+    </main>
 
-            <div class="talimat">
-                Beğendiğin iltifatları sağa "Ya seni yerim :)" <br>
-                Beğenmediklerini sola "Bune aq" kaydırabilirsin
-            </div>
-            <p id="counter" style="font-size: 0.8rem; margin-top: 12px; opacity: 0.4;">1 / 4</p>
+    <!-- Bottom Tab Bar -->
+    <nav class="tabbar">
+      <div class="tab active" data-tab="home">
+        <div class="tab-icon">⌂</div>
+        <span>Keşfet</span>
+      </div>
+      <div class="tab" data-tab="fav">
+        <div class="tab-icon">♡</div>
+        <span>Favoriler</span>
+      </div>
+      <div class="tab" data-tab="col">
+        <div class="tab-icon">◎</div>
+        <span>Koleksiyon</span>
+      </div>
+      <div class="tab" data-tab="profile">
+        <div class="tab-icon">☰</div>
+        <span>Profil</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Viewer Modal -->
+  <div class="viewer" id="viewer">
+    <div class="viewer-header">
+      <div style="width:36px"></div>
+      <div class="viewer-label">Önizleme</div>
+      <button class="close-btn" id="closeViewer">✕</button>
+    </div>
+    <div class="viewer-content">
+      <div class="viewer-card" id="viewerCard">
+        <div class="viewer-bg" id="viewerBg"></div>
+        <div class="viewer-shine"></div>
+        <div class="viewer-info">
+          <div class="viewer-title" id="viewerTitle"></div>
+          <div class="viewer-desc" id="viewerDesc"></div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div id="finalScreen">
-        <h1 id="percResult" style="color: #ffafbd; font-size: 3.5rem; margin-bottom: 10px;">%100</h1>
-        <p id="finalNote" style="font-size: 1.3rem; line-height: 1.6;"></p>
-        <p style="font-size: 0.75rem; opacity: 0.4; margin-top: 50px;">tekrar için ekranı yenile</p>
-    </div>
-
-    <audio id="bgMusic" loop preload="auto">
-        <source src="aaudi.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        const icerik = [
-            { img: "https://api.imghippo.com/files/ukM4075mOo.jpg", msg: "Bu site sadece senin yüzünü güldürmek için kodlandı! ✨" },
-            { img: "https://api.imghippo.com/files/5932Hs.jpg", msg: "Dünyanın en tatlı kişisine küçük bir kedi selamı... 🐱" },
-            { img: "https://api.imghippo.com/files/vNyz8896KDE.jpg", msg: "Moralin bozulduğunda bu linke gel, hep buradayız. 🐾" },
-            { img: "https://api.imghippo.com/files/ZRFT3254fWQ.jpg", msg: "Gülümsemek sana dünyadaki her şeyden çok yakışıyor! 😊" }
-        ];
-
-        let curIdx = 0, likeCount = 0, startX = 0, isMusicPlay = false;
-        const card = document.getElementById('kediKarti');
-        const itiraf = document.getElementById('itirafMetni');
-        const overlay = document.getElementById('reactionOverlay');
-        const wrapper = document.getElementById('mainWrapper');
-        const music = document.getElementById('bgMusic');
-
-        // MÜZİĞİ TETİKLEMEK İÇİN FONKSİYON
-        function playMusic() {
-            if(!isMusicPlay) {
-                music.play().then(() => {
-                    isMusicPlay = true;
-                }).catch(e => {
-                    console.log("Müzik engellendi, etkileşim bekleniyor.");
-                });
-            }
-        }
-
-        function handleStart(e) {
-            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-            playMusic(); // İlk dokunuşta müziği zorla başlatır
-        }
-
-        function handleEnd(e) {
-            let endX = e.type.includes('mouse') ? e.clientX : e.changedTouches[0].clientX;
-            let diff = endX - startX;
-
-            if (Math.abs(diff) > 60) {
-                if (diff > 0) processSwipe('right');
-                else processSwipe('left');
-            }
-        }
-
-        function processSwipe(dir) {
-            if(dir === 'right') {
-                likeCount++;
-                showReaction("Ya seni yerim :)", "#ff4b2b");
-                spawnHearts();
-            } else {
-                showReaction("Bune aq", "#555");
-            }
-
-            curIdx++;
-            if (curIdx < 4) {
-                setTimeout(() => {
-                    document.getElementById('kediResmi').src = icerik[curIdx].img;
-                    itiraf.innerText = icerik[curIdx].msg;
-                    document.getElementById('counter').innerText = (curIdx + 1) + " / 4";
-                }, 300);
-            } else {
-                setTimeout(showFinal, 800);
-            }
-        }
-
-        function showReaction(txt, color) {
-            overlay.innerText = txt;
-            overlay.style.color = color;
-            overlay.style.display = 'block';
-            wrapper.style.filter = "blur(12px)";
-            
-            setTimeout(() => { 
-                overlay.style.display = 'none'; 
-                wrapper.style.filter = "none";
-            }, 600);
-        }
-
-        function showFinal() {
-            const ratio = (likeCount / 4) * 100;
-            document.getElementById('finalScreen').style.display = 'flex';
-            document.getElementById('percResult').innerText = "%" + ratio;
-            document.getElementById('finalNote').innerText = "Cimcime seni ne kadar mutlu ettiysem ne mutlu bana 👾🎉";
-        }
-
-        function spawnHearts() {
-            for(let i=0; i<10; i++) {
-                const h = document.createElement('div');
-                h.className = 'heart'; h.innerHTML = '❤️';
-                h.style.left = Math.random() * 100 + 'vw';
-                h.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                document.getElementById('heartContainer').appendChild(h);
-                setTimeout(() => h.remove(), 3000);
-            }
-        }
-
-        // Dokunma ve Mouse hareketlerini dinle
-        card.addEventListener('mousedown', handleStart);
-        card.addEventListener('mouseup', handleEnd);
-        card.addEventListener('touchstart', handleStart);
-        card.addEventListener('touchend', handleEnd);
-        
-        // Ekstra: Sayfanın herhangi bir yerine tıklarsa da müzik başlasın
-        document.body.addEventListener('click', playMusic, {once: true});
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
