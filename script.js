@@ -1,141 +1,107 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+document.addEventListener("DOMContentLoaded", () => {
+    fetchVideos();
+});
+
+// JSON Verisini Çekme ve Slaytları Oluşturma
+async function fetchVideos() {
+    try {
+        const response = await fetch('videos.json');
+        const videos = await response.json();
+        
+        const wrapper = document.getElementById('video-wrapper');
+        wrapper.innerHTML = '';
+
+        videos.forEach(video => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `
+                <video src="${video.videoUrl}" loop playsinline></video>
+                <div class="overlay">
+                    <div class="user-info">
+                        <h3>${video.username}</h3>
+                        <p>${video.caption}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-like">❤️ <span>${video.likes}</span></button>
+                        <button class="btn-comment">💬 <span>${video.comments}</span></button>
+                        <button class="btn-share">🔗 <span>Paylaş</span></button>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(slide);
+        });
+
+        initSwiper();
+        initInteractions();
+
+    } catch (error) {
+        console.error("Video verisi yüklenirken hata oluştu:", error);
+    }
 }
 
-body, html {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: #0d0010;
-    color: #fff;
+// Swiper Başlatma
+function initSwiper() {
+    const swiper = new Swiper('.mySwiper', {
+        direction: 'vertical',
+        loop: false,
+        speed: 350,
+        mousewheel: true,
+        touchReleaseOnEdges: true,
+        on: {
+            init: function () {
+                playCurrentVideo(this);
+            },
+            slideChangeTransitionEnd: function () {
+                playCurrentVideo(this);
+            }
+        }
+    });
 }
 
-/* Header */
-.app-header {
-    position: absolute;
-    top: 25px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 10;
-    font-weight: 600;
-    font-size: 16px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+// Aktif Videoyu Oynatma Yönetimi
+function playCurrentVideo(swiperInstance) {
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(video => video.pause());
+
+    const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
+    if (!activeSlide) return;
+    
+    const activeVideo = activeSlide.querySelector('video');
+    if (activeVideo) {
+        activeVideo.currentTime = 0;
+        const playPromise = activeVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("iOS Otomatik Oynatma Engeli:", error);
+            });
+        }
+    }
 }
 
-.app-header .tab {
-    opacity: 0.6;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+// Tıklama ve Beğeni Etkileşimleri
+function initInteractions() {
+    document.querySelectorAll('.swiper-slide').forEach(slide => {
+        // Ekranın boş bir yerine basınca Videoyu Durdur/Oynat
+        slide.addEventListener('click', (e) => {
+            if (!e.target.closest('.action-buttons')) {
+                const video = slide.querySelector('video');
+                if (video) {
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                }
+            }
+        });
 
-.app-header .tab.active {
-    opacity: 1;
-    color: #ff2a8d;
-    border-bottom: 2px solid #ff2a8d;
-    padding-bottom: 4px;
-    filter: drop-shadow(0 0 8px #ff2a8d);
-}
-
-/* Swiper Kapsayıcı */
-.swiper {
-    width: 100%;
-    height: 100vh;
-}
-
-.swiper-slide {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.swiper-slide video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Katman / Overlay */
-.overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 15px 40px 15px;
-    background: linear-gradient(0deg, rgba(13,0,16,0.95) 0%, rgba(13,0,16,0.4) 50%, rgba(0,0,0,0) 100%);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    box-sizing: border-box;
-}
-
-.user-info {
-    max-width: 75%;
-}
-
-.user-info h3 {
-    font-size: 17px;
-    margin-bottom: 8px;
-    color: #ff66b2;
-    text-shadow: 0 0 10px rgba(255, 42, 141, 0.6);
-}
-
-.user-info p {
-    font-size: 14px;
-    line-height: 1.4;
-    opacity: 0.95;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-}
-
-/* Sağ Butonlar */
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    align-items: center;
-}
-
-.action-buttons button {
-    background: rgba(255, 42, 141, 0.15);
-    border: 1px solid rgba(255, 102, 178, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: white;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 42, 141, 0.25);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease;
-}
-
-.action-buttons button:active {
-    transform: scale(0.85);
-}
-
-.action-buttons button.liked {
-    background: rgba(255, 42, 141, 0.8);
-    border-color: #ff2a8d;
-    box-shadow: 0 0 20px rgba(255, 42, 141, 0.8);
-}
-
-.action-buttons button span {
-    font-size: 10px;
-    margin-top: 2px;
-    font-weight: 600;
-}
+        // Kalp / Beğeni Butonu Geçişi
+        const likeBtn = slide.querySelector('.btn-like');
+        if (likeBtn) {
+            likeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                likeBtn.classList.toggle('liked');
+            });
+        }
+    });
+                                                       }
