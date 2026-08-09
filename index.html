@@ -1,36 +1,94 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PinkScroll - Dynamic TikTok UI</title>
+    <title>Waptap Clone</title>
     
-    <!-- iOS PWA ve Tam Ekran Ayarları -->
+    <!-- iOS / PWA Ayarları -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0d0010">
+    <meta name="theme-color" content="#1a001a">
 
-    <!-- Swiper CSS -->
+    <!-- Swiper CSS & Font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header / Üst Bar -->
-    <div class="app-header">
-        <span class="tab active">Sana Özel</span>
-        <span class="tab">Takip Edilenler</span>
-    </div>
+    <!-- 18+ AGE GATE OVERLAY -->
+    <div id="age-gate" class="age-gate">
+        <div class="logo-container">
+            <div class="ice-cream-icon">🍦</div>
+            <h1 class="logo-text">waptap</h1>
+            <span class="jp-sub">ワプタップ</span>
+            <p class="tagline">Freedom to be yourself</p>
+        </div>
 
-    <!-- Swiper Kapsayıcı (Videolar JS ile buraya yüklenecek) -->
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper" id="video-wrapper">
-            <!-- Dinamik İletiler JS ile eklenecek -->
+        <button id="enter-btn" class="enter-btn">I am 18+ (ENTER)</button>
+
+        <p class="terms-text">
+            By entering, you confirm you are over 18 years of age and agree to the <strong>Terms and Conditions</strong> and <strong>Privacy Policy</strong>.
+        </p>
+
+        <div class="footer-links">
+            <span>About</span>
+            <span>Download App</span>
+            <span>Blog</span>
+            <span>FAQ</span>
         </div>
     </div>
 
-    <!-- Swiper JS & Uygulama Scripti -->
+    <!-- MAIN APP CONTENT -->
+    <div id="main-app" class="main-app hidden">
+        <!-- Top Bar -->
+        <header class="top-header">
+            <button class="icon-btn settings-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+            </button>
+            <div class="feed-selector">
+                <span>My Feed</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div style="width: 24px;"></div> <!-- Dengeleme için -->
+        </header>
+
+        <!-- Unmute Button -->
+        <button id="unmute-btn" class="unmute-badge">
+            Unmute 🔇
+        </button>
+
+        <!-- Video Swiper Container -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper" id="video-wrapper">
+                <!-- Videolar JS ile doldurulacak -->
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-item active">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            </button>
+            <button class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            <button class="nav-item add-btn">
+                <span>+</span>
+            </button>
+            <button class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </button>
+            <button class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+    
