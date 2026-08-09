@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "username": "@pink_vibes",
+    "caption": "Akışkan iOS arayüz testi 💖 #neon #pink",
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4",
+    "likes": "24.5B",
+    "comments": "1.2B"
+  },
+  {
+    "id": 2,
+    "username": "@neon_glow",
+    "caption": "Dinamik JSON altyapısı ile dikey kaydırma 🔥",
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-vertical-video-of-a-neon-sign-in-a-dark-room-41559-large.mp4",
+    "likes": "89.1B",
+    "comments": "3.4B"
+  },
+  {
+    "id": 3,
+    "username": "@aesthetic_flow",
+    "caption": "GitHub Pages üzerinde tam uyumlu çalışır! 🚀",
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-dancing-woman-in-a-room-with-pink-lights-42867-large.mp4",
+    "likes": "120B",
+    "comments": "8.9B"
+  }
+]
