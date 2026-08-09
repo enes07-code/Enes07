@@ -1,30 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetchVideos();
+    const ageGate = document.getElementById("age-gate");
+    const mainApp = document.getElementById("main-app");
+    const enterBtn = document.getElementById("enter-btn");
+    const unmuteBtn = document.getElementById("unmute-btn");
+
+    // 18+ Giriş Onayı
+    enterBtn.addEventListener("click", () => {
+        ageGate.classList.add("hidden");
+        mainApp.classList.remove("hidden");
+        fetchVideos();
+    });
+
+    // Unmute Butonu
+    let isMuted = true;
+    unmuteBtn.addEventListener("click", () => {
+        isMuted = !isMuted;
+        document.querySelectorAll("video").forEach(v => v.muted = isMuted);
+        unmuteBtn.innerText = isMuted ? "Unmute 🔇" : "Mute 🔊";
+    });
 });
 
-// JSON Verisini Çekme ve Slaytları Oluşturma
 async function fetchVideos() {
     try {
-        const response = await fetch('videos.json');
-        const videos = await response.json();
+        const res = await fetch("videos.json");
+        const videos = await res.json();
         
-        const wrapper = document.getElementById('video-wrapper');
-        wrapper.innerHTML = '';
+        const wrapper = document.getElementById("video-wrapper");
+        wrapper.innerHTML = "";
 
-        videos.forEach(video => {
-            const slide = document.createElement('div');
-            slide.className = 'swiper-slide';
+        videos.forEach(v => {
+            const slide = document.createElement("div");
+            slide.className = "swiper-slide";
             slide.innerHTML = `
-                <video src="${video.videoUrl}" loop playsinline></video>
-                <div class="overlay">
-                    <div class="user-info">
-                        <h3>${video.username}</h3>
-                        <p>${video.caption}</p>
+                <video src="${v.videoUrl}" loop playsinline muted></video>
+                <div class="feed-overlay">
+                    <div class="bottom-left-info">
+                        ${v.isExplicit ? '<span class="explicit-badge">EXPLICIT</span>' : ''}
+                        <div class="user-handle">${v.username}</div>
+                        <div class="video-caption">${v.caption}</div>
+                        <div class="view-count">▶ ${v.views}</div>
                     </div>
-                    <div class="action-buttons">
-                        <button class="btn-like">❤️ <span>${video.likes}</span></button>
-                        <button class="btn-comment">💬 <span>${video.comments}</span></button>
-                        <button class="btn-share">🔗 <span>Paylaş</span></button>
+                    <div class="side-actions">
+                        <div class="profile-avatar-wrapper">
+                            <div class="profile-avatar">👤</div>
+                            <span class="follow-tag">Follow</span>
+                        </div>
+                        <div class="action-item">
+                            <span class="action-icon">↗</span>
+                        </div>
+                        <div class="action-item">
+                            <span class="action-icon">💬</span>
+                            <span>${v.comments}</span>
+                        </div>
+                        <div class="action-item">
+                            <span class="action-icon">🤍</span>
+                            <span>${v.likes}</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -32,76 +63,29 @@ async function fetchVideos() {
         });
 
         initSwiper();
-        initInteractions();
 
-    } catch (error) {
-        console.error("Video verisi yüklenirken hata oluştu:", error);
+    } catch (e) {
+        console.error("Video yükleme hatası:", e);
     }
 }
 
-// Swiper Başlatma
 function initSwiper() {
     const swiper = new Swiper('.mySwiper', {
         direction: 'vertical',
-        loop: false,
-        speed: 350,
+        speed: 300,
         mousewheel: true,
-        touchReleaseOnEdges: true,
         on: {
-            init: function () {
-                playCurrentVideo(this);
-            },
-            slideChangeTransitionEnd: function () {
-                playCurrentVideo(this);
-            }
+            init: function() { playVideo(this); },
+            slideChangeTransitionEnd: function() { playVideo(this); }
         }
     });
 }
 
-// Aktif Videoyu Oynatma Yönetimi
-function playCurrentVideo(swiperInstance) {
-    const allVideos = document.querySelectorAll('video');
-    allVideos.forEach(video => video.pause());
-
-    const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
-    if (!activeSlide) return;
-    
-    const activeVideo = activeSlide.querySelector('video');
-    if (activeVideo) {
-        activeVideo.currentTime = 0;
-        const playPromise = activeVideo.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.log("iOS Otomatik Oynatma Engeli:", error);
-            });
-        }
+function playVideo(swiper) {
+    document.querySelectorAll("video").forEach(v => v.pause());
+    const activeSlide = swiper.slides[swiper.activeIndex];
+    if (activeSlide) {
+        const video = activeSlide.querySelector("video");
+        if (video) video.play();
     }
 }
-
-// Tıklama ve Beğeni Etkileşimleri
-function initInteractions() {
-    document.querySelectorAll('.swiper-slide').forEach(slide => {
-        // Ekranın boş bir yerine basınca Videoyu Durdur/Oynat
-        slide.addEventListener('click', (e) => {
-            if (!e.target.closest('.action-buttons')) {
-                const video = slide.querySelector('video');
-                if (video) {
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                }
-            }
-        });
-
-        // Kalp / Beğeni Butonu Geçişi
-        const likeBtn = slide.querySelector('.btn-like');
-        if (likeBtn) {
-            likeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                likeBtn.classList.toggle('liked');
-            });
-        }
-    });
-                                                       }
